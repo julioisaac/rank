@@ -21,12 +21,15 @@ const (
 $ make tests
 ```
 
+* **How to Coverage**
+```bash
+$ make coverage
+```
+
 * **How to Run**
 ```bash
 $ make run path=data/commits.csv
 ```
-
-
 
 ## Diagram
 The following diagram illustrates the workflow of the program, from loading the data to processing and sorting the repositories
@@ -42,6 +45,10 @@ graph TD
 
 ```
 
+### 📌 Necessary Improvements
+- Validations
+- Test coverage
+
 ## Built With
 
 + golang 1.24.1
@@ -49,4 +56,3 @@ graph TD
 ## About
 
 This repository activity ranking system is designed to process GitHub repository data and generate a score based on activity metrics such as commits, files changed, additions, and deletions. The system reads a CSV file containing commit data, processes it concurrently, calculates scores for each repository, and then returns the top repositories based on their activity.
-
