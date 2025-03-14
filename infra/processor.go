@@ -1,7 +1,10 @@
 package infra
 
 import (
+	"encoding/csv"
+	"fmt"
 	"log"
+	"os"
 	"rank/domain"
 	"sort"
 	"strconv"
@@ -20,6 +23,31 @@ type Result struct {
 
 func NewRepoProcessor() *RepoProcessor {
 	return &RepoProcessor{stats: make(map[string]domain.RepoStats)}
+}
+
+func LoadCSV(filePath string, ch chan<- []string) error {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("error opening file: %w", err)
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+
+	_, err = reader.Read()
+	if err != nil {
+		return fmt.Errorf("error reading CSV header: %w", err)
+	}
+
+	for {
+		record, err := reader.Read()
+		if err != nil {
+			close(ch)
+			break
+		}
+		ch <- record
+	}
+	return nil
 }
 
 func (rp *RepoProcessor) ProcessData(ch <-chan []string) {
