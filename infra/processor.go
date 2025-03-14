@@ -3,6 +3,7 @@ package infra
 import (
 	"log"
 	"rank/domain"
+	"sort"
 	"strconv"
 )
 
@@ -54,4 +55,21 @@ func (rp *RepoProcessor) ProcessData(ch <-chan []string) {
 		stats.Deletions += deletions
 		rp.stats[repo] = stats
 	}
+}
+
+func (rp *RepoProcessor) GetTopRepos(n int) Results {
+	results := make(Results, 0, len(rp.stats))
+
+	for repo, stats := range rp.stats {
+		results = append(results, Result{Repo: repo, Stats: stats})
+	}
+
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Stats.CalcActivityScore() > results[j].Stats.CalcActivityScore()
+	})
+
+	if len(results) > n {
+		return results[:n]
+	}
+	return results
 }
