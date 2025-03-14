@@ -26,11 +26,5 @@ func main() {
 	processor.ProcessData(dataChannel)
 
 	topRepos := processor.GetTopRepos(10)
-
-	for i := 0; i < len(topRepos); i++ {
-		r := topRepos[i]
-		rank := fmt.Sprintf("%v", i+1)
-		score := fmt.Sprintf("%f", r.Stats.CalcActivityScore())
-		fmt.Printf("Rank: %s, Repo: %s, Score: %s\n", rank, r.Repo, score)
-	}
+	topRepos.PrintTable()
 }

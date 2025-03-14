@@ -3,6 +3,7 @@ package infra
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/olekukonko/tablewriter"
 	"log"
 	"os"
 	"rank/domain"
@@ -100,4 +101,18 @@ func (rp *RepoProcessor) GetTopRepos(n int) Results {
 		return results[:n]
 	}
 	return results
+}
+
+func (r Results) PrintTable() {
+	fmt.Printf("\n--- Top %v Repositories ---\n", len(r))
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Rank", "Repository", "Score"})
+	for i := 0; i < len(r); i++ {
+		r := r[i]
+		rank := fmt.Sprintf("%v", i+1)
+		score := fmt.Sprintf("%f", r.Stats.CalcActivityScore())
+		row := []string{rank, r.Repo, score}
+		table.Append(row)
+	}
+	table.Render()
 }
